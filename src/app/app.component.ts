@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { registerFormConfig } from './constants/register-form.constants';
+import { IForm } from './interfaces/form.interfaces';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +9,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'test2';
+  registerForm = registerFormConfig as IForm
 }

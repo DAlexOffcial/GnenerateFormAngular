@@ -1,0 +1,18 @@
+<-- agregar cabezera 
+{
+    "ID": 1, <-- siempre en 0 para crear 
+    "Ferrocarril": "sample string 2",
+    "FECHA_DE_EVENTO": "2024-08-14T09:02:50.9941275-06:00",
+    "HoraEvento": "sample string 4", ---> borrar 
+    "Localidad": "sample string 5",
+    "Locomotora": "sample string 6",
+    "ReporteRealizado": "sample string 7",  <-- pregunatr a cal 
+    "ElaboroAviso": "sample string 8",
+    "Cre_": "sample string 9"
+
+    -- participo maquinista 
+    --> agregar tipo de aviso 
+    --> agregar nivel 
+    --> agregar descripcion del nivel
+
+}
