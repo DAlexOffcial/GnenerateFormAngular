@@ -1,39 +1,42 @@
-<h3>{{form.formTitle}}</h3>
-<form [formGroup]="dynamicFormGroup" class="row g-3">
-   <ng-container *ngFor="let control of form.formControls">
-    <div *ngIf="[ 'text' , 'email' , 'password' , 'number' , 'date' ].includes(control.type)"  [class]="control.class">
-       <label class="form-label">{{control.label}}</label>
-       <input formControlName="{{control.name}}" class="form-control" [type]="control.type">
-       <small *ngIf="dynamicFormGroup.get(control.name)?.invalid && dynamicFormGroup.get(control.name)?.touched" class="text-danger">{{getValidationsErrors(control)}}</small>
-    </div>
-
-    <div *ngIf="control.type === 'select'" [class]="control.class">
-      <label class="form-label">{{control.label}}</label>
-      <select formControlName="{{control.name}}" class="form-select" aria-label="Default select example">
-         <ng-container *ngFor="let opt of control.options" >
-              <option [value]="opt.value">{{opt.value}}</option>
-         </ng-container>
-      </select>
-      <small *ngIf="dynamicFormGroup.get(control.name)?.invalid && dynamicFormGroup.get(control.name)?.touched" class="text-danger">{{getValidationsErrors(control)}}</small>
-    </div>
-
-    <div *ngIf="control.type === 'radio'" [class]="control.class">
-      <label>
-         {{control.label}}
-      </label>
-         <ng-container *ngFor="let row of control.radioOptions" >
-            <div class="form-check">
-               <input formControlName="{{control.name}}"  [value]="row" type="radio" class="form-check-input">
-               <label class="form-check-label" [for]="control?.name">
-                  {{row}}
-               </label>
-            </div>
-         </ng-container>
+<div class="container mt-5" id="theContent">
+   <h3>{{form.formTitle}}</h3>
+   <form [formGroup]="dynamicFormGroup" class="row g-3">
+      <ng-container *ngFor="let control of form.formControls">
+       <div *ngIf="[ 'text' , 'email' , 'password' , 'number' , 'date' ].includes(control.type)"  [class]="control.class">
+          <label class="form-label">{{control.label}}</label>
+          <input formControlName="{{control.name}}" class="form-control" [type]="control.type">
+          <small *ngIf="dynamicFormGroup.get(control.name)?.invalid && dynamicFormGroup.get(control.name)?.touched" class="text-danger">{{getValidationsErrors(control)}}</small>
+       </div>
+   
+       <div *ngIf="control.type === 'select'" [class]="control.class">
+         <label class="form-label">{{control.label}}</label>
+         <select formControlName="{{control.name}}" class="form-select" aria-label="Default select example">
+            <ng-container *ngFor="let opt of control.options" >
+                 <option [value]="opt.value">{{opt.value}}</option>
+            </ng-container>
+         </select>
          <small *ngIf="dynamicFormGroup.get(control.name)?.invalid && dynamicFormGroup.get(control.name)?.touched" class="text-danger">{{getValidationsErrors(control)}}</small>
-    </div>
-   </ng-container>
-   <div class="col-12">
-      <button (click)="onSubmit()" type="submit" class="btn btn-primary mx-2"> {{ form.saveBtnTitle }}</button>
-      <button (click)="resetForm()" type="submit" class="btn btn-primary mx-2"> {{ form.resetBtnTitle }}</button>
-   </div>
-</form>
+       </div>
+   
+       <div *ngIf="control.type === 'radio'" [class]="control.class">
+         <label>
+            {{control.label}}
+         </label>
+            <ng-container *ngFor="let row of control.radioOptions" >
+               <div class="form-check">
+                  <input formControlName="{{control.name}}"  [value]="row" type="radio" class="form-check-input">
+                  <label class="form-check-label" [for]="control?.name">
+                     {{row}}
+                  </label>
+               </div>
+            </ng-container>
+            <small *ngIf="dynamicFormGroup.get(control.name)?.invalid && dynamicFormGroup.get(control.name)?.touched" class="text-danger">{{getValidationsErrors(control)}}</small>
+       </div>
+      </ng-container>
+      <div class="col-12">
+         <button *ngIf="hidde()" (click)="onSubmit()" type="submit" class="btn btn-primary mx-2"> {{ form.saveBtnTitle }}</button>
+         <button *ngIf="hidde()" (click)="resetForm()" type="submit" class="btn btn-primary mx-2"> {{ form.resetBtnTitle }}</button>
+         <button *ngIf="hidde()" (click)="generatePDF()" type="submit" class="btn btn-info mx-2"> PDF </button>
+      </div>
+   </form>
+</div>

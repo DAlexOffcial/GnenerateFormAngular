@@ -15,7 +15,7 @@ export const registerFormConfig: IForm = {
             "validators": [
                 {
                     "validatorName": "required",
-                    "required": true,
+                    "required": false,
                     "message": "*First name is required"
                 }
             ]

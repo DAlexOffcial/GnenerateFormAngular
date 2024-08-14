@@ -1,6 +1,8 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IForm, IFormControl, IValidators } from 'src/app/interfaces/form.interfaces';
+import { jsPDF } from 'jspdf'
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -11,6 +13,7 @@ export class DynamicFormComponent implements OnInit{
   @Input() form !: IForm;
   
   public fb = inject(FormBuilder)
+  public hidde = signal(true)
   dynamicFormGroup: FormGroup = this.fb.group({})
   
   ngOnInit(): void {
@@ -21,8 +24,8 @@ export class DynamicFormComponent implements OnInit{
 
          if(control.validators){
           control.validators.forEach((val : IValidators) => {
-            if(val.validatorName === 'required') controlsValidators.push(Validators.required);
-            if(val.validatorName === 'email') controlsValidators.push(Validators.email);
+            if(val.validatorName === 'required' && val.required === true) controlsValidators.push(Validators.required);
+            if(val.validatorName === 'email' && val.required === true) controlsValidators.push(Validators.email);
             if(val.validatorName === 'minlength') controlsValidators.push(Validators.minLength(val.minLength as number));
             if(val.validatorName === 'maxlength') controlsValidators.push(Validators.maxLength(val.maxLenght as number));
             if(val.validatorName === 'pattern') controlsValidators.push(Validators.pattern(val.pattern as string));
@@ -32,17 +35,6 @@ export class DynamicFormComponent implements OnInit{
       });
       this.dynamicFormGroup = this.fb.group(formGroup)
     }
-  }
-
-  onSubmit(){
-    if(this.dynamicFormGroup.valid){
-      console.log(this.dynamicFormGroup.value);
-    }
-    this.dynamicFormGroup.markAllAsTouched()
-  }
-
-  resetForm(){
-    this.dynamicFormGroup.reset()
   }
 
   getValidationsErrors(control: IFormControl) : string{
@@ -56,5 +48,53 @@ export class DynamicFormComponent implements OnInit{
 
     return errorMessage
   }
+
+  generatePDF() {
+    this.hidde.set(false)
+    
+    const elementToPrint = document.getElementById('theContent');
+    if (!elementToPrint) return;
+    
+
+    html2canvas(elementToPrint, { scale: 2, useCORS: true }).then((canvas) => {
+       const imgWidth = 210; // Ancho de la imagen en mm
+       const pageHeight = 297; // Altura de la página en mm
+       const imgHeight = (canvas.height * imgWidth) / canvas.width;
+       let heightLeft = imgHeight;
+       
+       const pdf = new jsPDF('p', 'mm', 'a4');
+       let position = 0;
+ 
+       // Agregar la primera página
+       pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
+       heightLeft -= pageHeight;
+ 
+       // Agregar páginas adicionales si el contenido es más alto que una página A4
+       while (heightLeft > 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+       }
+ 
+       pdf.save('myFile.pdf');
+    });
+
+    this.hidde.set(true)
+ }
+ 
+
+  
+  onSubmit(){
+    if(this.dynamicFormGroup.valid){
+      console.log(this.dynamicFormGroup.value);
+    }
+    this.dynamicFormGroup.markAllAsTouched()
+  }
+
+  resetForm(){
+    this.dynamicFormGroup.reset()
+  }
+
 
 }
